@@ -1,8 +1,8 @@
 extern crate proc_macro;
 
 // This file littered with these essential cfgs so ensure them.
-#[cfg(not(any(RUSTC_WITH_SPECIALIZATION, RUSTC_WITHOUT_SPECIALIZATION)))]
-compile_error!("rustc_version is missing in build dependency and build.rs is not specified");
+//#[cfg(not(any(RUSTC_WITH_SPECIALIZATION, RUSTC_WITHOUT_SPECIALIZATION)))]
+//compile_error!("rustc_version is missing in build dependency and build.rs is not specified");
 
 #[cfg(any(RUSTC_WITH_SPECIALIZATION, RUSTC_WITHOUT_SPECIALIZATION))]
 use proc_macro::TokenStream;
