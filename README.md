@@ -1,3 +1,6 @@
+https://stackoverflow.com/questions/55912871/how-to-work-with-openssl-for-rust-within-a-windows-development-environment
+$env:VCPKGRS_DYNAMIC=1
+
 <p align="center">
   <a href="https://solana.com">
     <img alt="Solana" src="https://i.imgur.com/IKyzQ6T.png" width="250" />
