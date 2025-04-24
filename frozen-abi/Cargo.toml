@@ -53,3 +53,6 @@ rustc_version = "0.4"
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(RUSTC_WITHOUT_SPECIALIZATION)'] }
 
 
+
+
+#![feature(specialization)]
