@@ -1,3 +1,18 @@
+   1 try { . "c:\Users\gentd\AppData\Local\Programs\Microsoft VS Code\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1" } catch {}
+   2 cargo build
+   3 vcpkg
+   4 vcpkg install openssl
+   5 $env:VCPKG_ROOT="C:\Users\gentd\OneDrive\Documents\GitHub\vcpkg"
+   6 vcpkg install openssl
+   7 cargo build
+   8 clear
+$env:
+
+
+
+=
+   
+
 <p align="center">
   <a href="https://solana.com">
     <img alt="Solana" src="https://i.imgur.com/IKyzQ6T.png" width="250" />
