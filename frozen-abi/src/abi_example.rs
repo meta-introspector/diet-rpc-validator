@@ -1,10 +1,10 @@
-// use {
-//     crate::abi_digester::{AbiDigester, DigestError, DigestResult},
+ use {
+     crate::abi_digester::{AbiDigester, DigestError, DigestResult},
 //     lazy_static::lazy_static,
-//     log::*,
-//     serde::Serialize,
-//     std::any::type_name,
-// };
+     log::*,
+     serde::Serialize,
+     std::any::type_name,
+ };
 
 pub trait AbiExample: Sized {
      fn example() -> Self;
@@ -216,20 +216,20 @@ pub trait AbiExample: Sized {
 // atomic_example_impls! { AtomicBool }
 
 // //#[cfg(not(target_os = "solana"))]
-// use generic_array::{ArrayLength, GenericArray};
+use generic_array::{ArrayLength, GenericArray};
 // //#[cfg(not(target_os = "solana"))]
-// impl<T: Default, U: ArrayLength<T>> AbiExample for GenericArray<T, U> {
-//     fn example() -> Self {
-//         Self::default()
-//     }
-// }
+impl<T: Default, U: ArrayLength<T>> AbiExample for GenericArray<T, U> {
+     fn example() -> Self {
+         Self::default()
+     }
+ }
 
-// use bv::{BitVec, BlockType};
-// impl<T: BlockType> AbiExample for BitVec<T> {
-//     fn example() -> Self {
-//         Self::default()
-//     }
-// }
+use bv::{BitVec, BlockType};
+impl<T: BlockType> AbiExample for BitVec<T> {
+     fn example() -> Self {
+         Self::default()
+     }
+ }
 
 impl<T: BlockType> IgnoreAsHelper for BitVec<T> {}
 impl<T: BlockType> EvenAsOpaque for BitVec<T> {}
@@ -238,9 +238,9 @@ pub(crate) fn normalize_type_name(type_name: &str) -> String {
     type_name.chars().filter(|c| *c != '&').collect()
 }
 
-// type Placeholder = ();
+//type Placeholder = ();
 
-// impl<T: Sized> AbiExample for T {
+//impl<T: Sized> AbiExample for T {
 //     default fn example() -> Self {
 //         <Placeholder>::type_erased_example()
 //     }
@@ -273,82 +273,82 @@ pub(crate) fn normalize_type_name(type_name: &str) -> String {
 //     }
 // }
 
-// impl<T: AbiExample> AbiExample for Option<T> {
-//     fn example() -> Self {
-//         info!("AbiExample for (Option<T>): {}", type_name::<Self>());
-//         Some(T::example())
-//     }
-// }
+ // impl<T: AbiExample> AbiExample for Option<T> {
+ //     fn example() -> Self {
+ //         info!("AbiExample for (Option<T>): {}", type_name::<Self>());
+ //         Some(T::example())
+ //     }
+ // }
 
-// impl<O: AbiExample, E: AbiExample> AbiExample for Result<O, E> {
-//     fn example() -> Self {
-//         info!("AbiExample for (Result<O, E>): {}", type_name::<Self>());
-//         Ok(O::example())
-//     }
-// }
+ impl<O: AbiExample, E: AbiExample> AbiExample for Result<O, E> {
+      fn example() -> Self {
+          info!("AbiExample for (Result<O, E>): {}", type_name::<Self>());
+          Ok(O::example())
+      }
+  }
 
-// impl<T: AbiExample> AbiExample for Box<T> {
-//     fn example() -> Self {
-//         info!("AbiExample for (Box<T>): {}", type_name::<Self>());
-//         Box::new(T::example())
-//     }
-// }
+ impl<T: AbiExample> AbiExample for Box<T> {
+     fn example() -> Self {
+         info!("AbiExample for (Box<T>): {}", type_name::<Self>());
+         Box::new(T::example())
+     }
+ }
 
-// impl<T> AbiExample for Box<dyn Fn(&mut T) + Sync + Send> {
-//     fn example() -> Self {
-//         info!("AbiExample for (Box<T>): {}", type_name::<Self>());
-//         Box::new(move |_t: &mut T| {})
-//     }
-// }
+ impl<T> AbiExample for Box<dyn Fn(&mut T) + Sync + Send> {
+   fn example() -> Self {
+         info!("AbiExample for (Box<T>): {}", type_name::<Self>());
+         Box::new(move |_t: &mut T| {})
+     }
+ }
 
-// impl<T, U> AbiExample for Box<dyn Fn(&mut T, U) + Sync + Send> {
-//     fn example() -> Self {
-//         info!("AbiExample for (Box<T, U>): {}", type_name::<Self>());
-//         Box::new(move |_t: &mut T, _u: U| {})
-//     }
-// }
+impl<T, U> AbiExample for Box<dyn Fn(&mut T, U) + Sync + Send> {
+    fn example() -> Self {
+        info!("AbiExample for (Box<T, U>): {}", type_name::<Self>());
+        Box::new(move |_t: &mut T, _u: U| {})
+    }
+}
 
-// impl<T: AbiExample> AbiExample for Box<[T]> {
-//     fn example() -> Self {
-//         info!("AbiExample for (Box<[T]>): {}", type_name::<Self>());
-//         Box::new([T::example()])
-//     }
-// }
+impl<T: AbiExample> AbiExample for Box<[T]> {
+    fn example() -> Self {
+        info!("AbiExample for (Box<[T]>): {}", type_name::<Self>());
+        Box::new([T::example()])
+    }
+}
 
-// impl<T: AbiExample> AbiExample for std::marker::PhantomData<T> {
-//     fn example() -> Self {
-//         info!("AbiExample for (PhantomData<T>): {}", type_name::<Self>());
-//         <std::marker::PhantomData<T>>::default()
-//     }
-// }
+impl<T: AbiExample> AbiExample for std::marker::PhantomData<T> {
+    fn example() -> Self {
+        info!("AbiExample for (PhantomData<T>): {}", type_name::<Self>());
+        <std::marker::PhantomData<T>>::default()
+    }
+}
 
-// impl<T: AbiExample> AbiExample for std::sync::Arc<T> {
-//     fn example() -> Self {
-//         info!("AbiExample for (Arc<T>): {}", type_name::<Self>());
-//         std::sync::Arc::new(T::example())
-//     }
-// }
+impl<T: AbiExample> AbiExample for std::sync::Arc<T> {
+    fn example() -> Self {
+        info!("AbiExample for (Arc<T>): {}", type_name::<Self>());
+        std::sync::Arc::new(T::example())
+    }
+}
 
-// impl<T: AbiExample> AbiExample for std::rc::Rc<T> {
-//     fn example() -> Self {
-//         info!("AbiExample for (Rc<T>): {}", type_name::<Self>());
-//         std::rc::Rc::new(T::example())
-//     }
-// }
+impl<T: AbiExample> AbiExample for std::rc::Rc<T> {
+    fn example() -> Self {
+        info!("AbiExample for (Rc<T>): {}", type_name::<Self>());
+        std::rc::Rc::new(T::example())
+    }
+}
 
-// impl<T: AbiExample> AbiExample for std::sync::Mutex<T> {
-//     fn example() -> Self {
-//         info!("AbiExample for (Mutex<T>): {}", type_name::<Self>());
-//         std::sync::Mutex::new(T::example())
-//     }
-// }
+impl<T: AbiExample> AbiExample for std::sync::Mutex<T> {
+    fn example() -> Self {
+        info!("AbiExample for (Mutex<T>): {}", type_name::<Self>());
+        std::sync::Mutex::new(T::example())
+    }
+}
 
-// impl<T: AbiExample> AbiExample for std::sync::RwLock<T> {
-//     fn example() -> Self {
-//         info!("AbiExample for (RwLock<T>): {}", type_name::<Self>());
-//         std::sync::RwLock::new(T::example())
-//     }
-// }
+impl<T: AbiExample> AbiExample for std::sync::RwLock<T> {
+    fn example() -> Self {
+        info!("AbiExample for (RwLock<T>): {}", type_name::<Self>());
+        std::sync::RwLock::new(T::example())
+    }
+}
 
 // use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 
@@ -397,17 +397,33 @@ pub(crate) fn normalize_type_name(type_name: &str) -> String {
 //     }
 // }
 
-// lazy_static! {
-//     /// we need &Vec<u8>, so we need something with a static lifetime
-//     static ref VEC_U8: Vec<u8> = vec![u8::default()];
-// }
+macro_rules! impl_abi_example_for_arrays {
+    ($($size:expr),*) => {
+        $(
+            impl AbiExample for [u8; $size] {
+                fn example() -> Self {
+                    [0u8; $size] // Default zero-initialized array
+                }
+            }
+        )*
+    };
+}
 
-// impl AbiExample for &Vec<u8> {
-//     fn example() -> Self {
-//         info!("AbiExample for (&Vec<u8>): {}", type_name::<Self>());
-//         &VEC_U8
-//     }
-// }
+// Implement for common sizes including 32
+impl_abi_example_for_arrays!(1, 2, 4, 8, 16, 32, 64);
+
+
+ // lazy_static! {
+ //     /// we need &Vec<u8>, so we need something with a static lifetime
+ //     static ref VEC_U8: Vec<u8> = vec![u8::default()];
+ // }
+
+ // impl AbiExample for &Vec<u8> {
+ //     fn example() -> Self {
+ //         info!("AbiExample for (&Vec<u8>): {}", type_name::<Self>());
+ //         &VEC_U8
+ //     }
+ // }
 
 // impl AbiExample for &[u8] {
 //     fn example() -> Self {
