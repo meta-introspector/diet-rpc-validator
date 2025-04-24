@@ -3,41 +3,41 @@ extern crate proc_macro;
 // This file littered with these essential cfgs so ensure them.
 //#[cfg(not(any(RUSTC_WITH_SPECIALIZATION, RUSTC_WITHOUT_SPECIALIZATION)))]
 //compile_error!("rustc_version is missing in build dependency and build.rs is not specified");
-
-#[cfg(any(RUSTC_WITH_SPECIALIZATION, RUSTC_WITHOUT_SPECIALIZATION))]
+//
+//#[cfg(any(RUSTC_WITH_SPECIALIZATION, RUSTC_WITHOUT_SPECIALIZATION))]
 use proc_macro::TokenStream;
 
 // Define dummy macro_attribute and macro_derive for stable rustc
 
-#[cfg(RUSTC_WITHOUT_SPECIALIZATION)]
+//#[cfg(RUSTC_WITHOUT_SPECIALIZATION)]
 #[proc_macro_attribute]
-pub fn frozen_abi(_attrs: TokenStream, item: TokenStream) -> TokenStream {
+pub fn frozen_abi_wo(_attrs: TokenStream, item: TokenStream) -> TokenStream {
     item
 }
 
-#[cfg(RUSTC_WITHOUT_SPECIALIZATION)]
-#[proc_macro_derive(AbiExample)]
-pub fn derive_abi_sample(_item: TokenStream) -> TokenStream {
+//#[cfg(RUSTC_WITHOUT_SPECIALIZATION)]
+#[proc_macro_derive(AbiExampleWo)]
+pub fn derive_abi_sample_wo(_item: TokenStream) -> TokenStream {
     "".parse().unwrap()
 }
 
-#[cfg(RUSTC_WITHOUT_SPECIALIZATION)]
-#[proc_macro_derive(AbiEnumVisitor)]
-pub fn derive_abi_enum_visitor(_item: TokenStream) -> TokenStream {
+//#[cfg(RUSTC_WITHOUT_SPECIALIZATION)]
+#[proc_macro_derive(AbiEnumVisitorWo)]
+pub fn derive_abi_enum_visitor_wo(_item: TokenStream) -> TokenStream {
     "".parse().unwrap()
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 use proc_macro2::{Span, TokenStream as TokenStream2, TokenTree::Group};
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 use quote::quote;
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 use syn::{
     parse_macro_input, Attribute, AttributeArgs, Error, Fields, Ident, Item, ItemEnum, ItemStruct,
     ItemType, Lit, Meta, NestedMeta, Variant,
 };
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn filter_serde_attrs(attrs: &[Attribute]) -> bool {
     let mut skip = false;
 
@@ -59,7 +59,7 @@ fn filter_serde_attrs(attrs: &[Attribute]) -> bool {
     skip
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn filter_allow_attrs(attrs: &mut Vec<Attribute>) {
     attrs.retain(|attr| {
         let ss = &attr.path.segments.first().unwrap().ident.to_string();
@@ -67,7 +67,7 @@ fn filter_allow_attrs(attrs: &mut Vec<Attribute>) {
     });
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn derive_abi_sample_enum_type(input: ItemEnum) -> TokenStream {
     let type_name = &input.ident;
 
@@ -144,7 +144,7 @@ fn derive_abi_sample_enum_type(input: ItemEnum) -> TokenStream {
     result.into()
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn derive_abi_sample_struct_type(input: ItemStruct) -> TokenStream {
     let type_name = &input.ident;
     let mut sample_fields = quote! {};
@@ -199,7 +199,7 @@ fn derive_abi_sample_struct_type(input: ItemStruct) -> TokenStream {
     result.into()
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 #[proc_macro_derive(AbiExample)]
 pub fn derive_abi_sample(item: TokenStream) -> TokenStream {
     let item = parse_macro_input!(item as Item);
@@ -213,7 +213,7 @@ pub fn derive_abi_sample(item: TokenStream) -> TokenStream {
     }
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn do_derive_abi_enum_visitor(input: ItemEnum) -> TokenStream {
     let type_name = &input.ident;
     let mut serialized_variants = quote! {};
@@ -251,7 +251,7 @@ fn do_derive_abi_enum_visitor(input: ItemEnum) -> TokenStream {
     }).into()
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 #[proc_macro_derive(AbiEnumVisitor)]
 pub fn derive_abi_enum_visitor(item: TokenStream) -> TokenStream {
     let item = parse_macro_input!(item as Item);
@@ -264,7 +264,7 @@ pub fn derive_abi_enum_visitor(item: TokenStream) -> TokenStream {
     }
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn quote_for_test(
     test_mod_ident: &Ident,
     type_name: &Ident,
@@ -308,12 +308,12 @@ fn quote_for_test(
     }
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn test_mod_name(type_name: &Ident) -> Ident {
     Ident::new(&format!("{type_name}_frozen_abi"), Span::call_site())
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn frozen_abi_type_alias(input: ItemType, expected_digest: &str) -> TokenStream {
     let type_name = &input.ident;
     let test = quote_for_test(&test_mod_name(type_name), type_name, expected_digest);
@@ -324,7 +324,7 @@ fn frozen_abi_type_alias(input: ItemType, expected_digest: &str) -> TokenStream 
     result.into()
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn frozen_abi_struct_type(input: ItemStruct, expected_digest: &str) -> TokenStream {
     let type_name = &input.ident;
     let test = quote_for_test(&test_mod_name(type_name), type_name, expected_digest);
@@ -335,7 +335,7 @@ fn frozen_abi_struct_type(input: ItemStruct, expected_digest: &str) -> TokenStre
     result.into()
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn quote_sample_variant(
     type_name: &Ident,
     ty_generics: &syn::TypeGenerics,
@@ -381,7 +381,7 @@ fn quote_sample_variant(
     }
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 fn frozen_abi_enum_type(input: ItemEnum, expected_digest: &str) -> TokenStream {
     let type_name = &input.ident;
     let test = quote_for_test(&test_mod_name(type_name), type_name, expected_digest);
@@ -392,7 +392,7 @@ fn frozen_abi_enum_type(input: ItemEnum, expected_digest: &str) -> TokenStream {
     result.into()
 }
 
-#[cfg(RUSTC_WITH_SPECIALIZATION)]
+//#[cfg(RUSTC_WITH_SPECIALIZATION)]
 #[proc_macro_attribute]
 pub fn frozen_abi(attrs: TokenStream, item: TokenStream) -> TokenStream {
     let args = parse_macro_input!(attrs as AttributeArgs);
