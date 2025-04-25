@@ -33,13 +33,13 @@
 /// likely introduce undefined behavior.
 #[inline]
 pub fn sol_memcpy(dst: &mut [u8], src: &[u8], n: usize) {
-    #[cfg(target_os = "solana")]
+//    #[cfg(target_os = "solana")]
     unsafe {
         crate::syscalls::sol_memcpy_(dst.as_mut_ptr(), src.as_ptr(), n as u64);
     }
 
-    #[cfg(not(target_os = "solana"))]
-    crate::program_stubs::sol_memcpy(dst.as_mut_ptr(), src.as_ptr(), n);
+//    #[cfg(not(target_os = "solana"))]
+//    crate::program_stubs::sol_memcpy(dst.as_mut_ptr(), src.as_ptr(), n);
 }
 
 /// Like C `memmove`.
@@ -63,11 +63,11 @@ pub fn sol_memcpy(dst: &mut [u8], src: &[u8], n: usize) {
 /// [`ptr::copy`]: https://doc.rust-lang.org/std/ptr/fn.copy.html
 #[inline]
 pub unsafe fn sol_memmove(dst: *mut u8, src: *mut u8, n: usize) {
-    #[cfg(target_os = "solana")]
+//    #[cfg(target_os = "solana")]
     crate::syscalls::sol_memmove_(dst, src, n as u64);
 
-    #[cfg(not(target_os = "solana"))]
-    crate::program_stubs::sol_memmove(dst, src, n);
+//    #[cfg(not(target_os = "solana"))]
+//    crate::program_stubs::sol_memmove(dst, src, n);
 }
 
 /// Like C `memcmp`.
@@ -98,12 +98,12 @@ pub unsafe fn sol_memmove(dst: *mut u8, src: *mut u8, n: usize) {
 pub fn sol_memcmp(s1: &[u8], s2: &[u8], n: usize) -> i32 {
     let mut result = 0;
 
-    #[cfg(target_os = "solana")]
+//    #[cfg(target_os = "solana")]
     unsafe {
         crate::syscalls::sol_memcmp_(s1.as_ptr(), s2.as_ptr(), n as u64, &mut result as *mut i32);
     }
 
-    #[cfg(not(target_os = "solana"))]
+//    #[cfg(not(target_os = "solana"))]
     crate::program_stubs::sol_memcmp(s1.as_ptr(), s2.as_ptr(), n, &mut result as *mut i32);
 
     result

@@ -3,7 +3,7 @@ use crate::{
     pubkey::Pubkey,
 };
 
-#[cfg(target_feature = "static-syscalls")]
+//#[cfg(target_feature = "static-syscalls")]
 macro_rules! define_syscall {
     (fn $name:ident($($arg:ident: $typ:ty),*) -> $ret:ty) => {
 		#[inline]
@@ -24,17 +24,17 @@ macro_rules! define_syscall {
     }
 }
 
-#[cfg(not(target_feature = "static-syscalls"))]
-macro_rules! define_syscall {
-	(fn $name:ident($($arg:ident: $typ:ty),*) -> $ret:ty) => {
-		extern "C" {
-			pub fn $name($($arg: $typ),*) -> $ret;
-		}
-	};
-	(fn $name:ident($($arg:ident: $typ:ty),*)) => {
-		define_syscall!(fn $name($($arg: $typ),*) -> ());
-	}
-}
+//#[cfg(not(target_feature = "static-syscalls"))]
+// macro_rules! define_syscall {
+// 	(fn $name:ident($($arg:ident: $typ:ty),*) -> $ret:ty) => {
+// 		extern "C" {
+// 			pub fn $name($($arg: $typ),*) -> $ret;
+// 		}
+// 	};
+// 	(fn $name:ident($($arg:ident: $typ:ty),*)) => {
+// 		define_syscall!(fn $name($($arg: $typ),*) -> ());
+// 	}
+// }
 
 define_syscall!(fn sol_log_(message: *const u8, len: u64));
 define_syscall!(fn sol_log_64_(arg1: u64, arg2: u64, arg3: u64, arg4: u64, arg5: u64));
@@ -67,12 +67,12 @@ define_syscall!(fn sol_curve_multiscalar_mul(curve_id: u64, scalars_addr: *const
 define_syscall!(fn sol_curve_pairing_map(curve_id: u64, point: *const u8, result: *mut u8) -> u64);
 define_syscall!(fn sol_alt_bn128_group_op(group_op: u64, input: *const u8, input_size: u64, result: *mut u8) -> u64);
 
-#[cfg(target_feature = "static-syscalls")]
+//#[cfg(target_feature = "static-syscalls")]
 pub const fn sys_hash(name: &str) -> usize {
     murmur3_32(name.as_bytes(), 0) as usize
 }
 
-#[cfg(target_feature = "static-syscalls")]
+//#[cfg(target_feature = "static-syscalls")]
 const fn murmur3_32(buf: &[u8], seed: u32) -> u32 {
     const fn pre_mix(buf: [u8; 4]) -> u32 {
         u32::from_le_bytes(buf)

@@ -413,6 +413,11 @@ macro_rules! impl_abi_example_for_arrays {
 impl_abi_example_for_arrays!(1, 2, 4, 8, 16, 32, 64);
 
 
+impl AbiExample for u8 {
+fn example() -> Self {
+              0u8 // Default zero-initialized array
+                }
+            }
  // lazy_static! {
  //     /// we need &Vec<u8>, so we need something with a static lifetime
  //     static ref VEC_U8: Vec<u8> = vec![u8::default()];

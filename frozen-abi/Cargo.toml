@@ -24,8 +24,8 @@ sha2 = "*"
 solana-frozen-abi-macro = { path = "macro", version = "=1.15.1" }
 thiserror = "1.0"
 
-[target.'cfg(not(target_os = "solana"))'.dependencies]
-ahash = { version = "0.8.11", features = ["default", "std"] }
+#[target.'cfg(not(target_os = "solana"))'.dependencies]
+#ahash = { version = "0.8.11", features = ["default", "std"] }
 blake3 = { version = "1.3.1", features = ["digest", "traits-preview"] }
 block-buffer = { version = "0.9.0", features = ["block-padding"] }
 byteorder = { version = "1.4.3", features = ["default", "i128", "std"] }
@@ -43,8 +43,8 @@ once_cell = { version = "1.13", features = ["alloc", "default", "race", "std"] }
 rand_core = { version = "0.6.3", features = ["alloc", "getrandom", "std"] }
 subtle = { version = "*", features = ["default", "i128", "std"] }
 
-[target.'cfg(not(target_os = "solana"))'.dev-dependencies]
-solana-logger = { path = "../logger", version = "=1.15.1" }
+#[target.'cfg(not(target_os = "solana"))'.dev-dependencies]
+#solana-logger = { path = "../logger", version = "=1.15.1" }
 
 [build-dependencies]
 rustc_version = "0.4"

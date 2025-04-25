@@ -40,7 +40,7 @@ extern crate self as solana_sdk;
 pub use signer::signers;
 // These solana_program imports could be *-imported, but that causes a bunch of
 // confusing duplication in the docs due to a rustdoc bug. #26211
-#[cfg(not(target_os = "solana"))]
+//#[cfg(not(target_os = "solana"))]
 pub use solana_program::program_stubs;
 pub use solana_program::{
     account_info, address_lookup_table_account, alt_bn128, blake3, borsh, bpf_loader,

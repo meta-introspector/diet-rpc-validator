@@ -1,3 +1,5 @@
+use crate::message::non_bpf_modules::AccountKeys
+use crate::message::non_bpf_modules::v0::AccountKeys
 use {
     crate::{
         bpf_loader_upgradeable,

@@ -1,4 +1,4 @@
-#![cfg(target_os = "solana")]
+//#![cfg(target_os = "solana")]
 
 use solana_program::{
     account_info::AccountInfo, entrypoint::ProgramResult, msg, program::invoke,
