@@ -13,28 +13,28 @@ publish = false
 [dependencies]
 futures-util = "0.3.25"
 serde_json = "1.0.83"
-solana-ledger = { path = "../ledger", version = "=1.15.1" }
-solana-measure = { path = "../measure", version = "=1.15.1" }
-solana-merkle-tree = { path = "../merkle-tree", version = "=1.15.1" }
-solana-metrics = { path = "../metrics", version = "=1.15.1" }
-solana-perf = { path = "../perf", version = "=1.15.1" }
-solana-pubsub-client = { path = "../pubsub-client", version = "=1.15.1" }
-solana-rayon-threadlimit = { path = "../rayon-threadlimit", version = "=1.15.1" }
-solana-rpc = { path = "../rpc", version = "=1.15.1" }
-solana-rpc-client = { path = "../rpc-client", version = "=1.15.1", default-features = false }
-solana-rpc-client-api = { path = "../rpc-client-api", version = "=1.15.1" }
-solana-runtime = { path = "../runtime", version = "=1.15.1" }
-solana-sdk = { path = "../sdk", version = "=1.15.1" }
-solana-streamer = { path = "../streamer", version = "=1.15.1" }
-solana-test-validator = { path = "../test-validator", version = "=1.15.1" }
-solana-transaction-status = { path = "../transaction-status", version = "=1.15.1" }
-solana-version = { path = "../version", version = "=1.15.1" }
+solana-ledger = { path = "../ledger", version = "*" }
+solana-measure = { path = "../measure", version = "*" }
+solana-merkle-tree = { path = "../merkle-tree", version = "*" }
+solana-metrics = { path = "../metrics", version = "*" }
+solana-perf = { path = "../perf", version = "*" }
+solana-pubsub-client = { path = "../pubsub-client", version = "*" }
+solana-rayon-threadlimit = { path = "../rayon-threadlimit", version = "*" }
+solana-rpc = { path = "../rpc", version = "*" }
+solana-rpc-client = { path = "../rpc-client", version = "*", default-features = false }
+solana-rpc-client-api = { path = "../rpc-client-api", version = "*" }
+solana-runtime = { path = "../runtime", version = "*" }
+solana-sdk = { path = "../sdk", version = "*" }
+solana-streamer = { path = "../streamer", version = "*" }
+solana-test-validator = { path = "../test-validator", version = "*" }
+solana-transaction-status = { path = "../transaction-status", version = "*" }
+solana-version = { path = "../version", version = "*" }
 systemstat = "0.2.0"
-tokio = { version = "~1.14.1", features = ["full"] }
+tokio = { version = "*", features = ["full"] }
 tungstenite = { version = "0.17.2", features = ["rustls-tls-webpki-roots"] }
 
 [dev-dependencies]
-solana-logger = { path = "../logger", version = "=1.15.1" }
+solana-logger = { path = "../logger", version = "*" }
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

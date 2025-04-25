@@ -14,19 +14,19 @@ crossbeam-channel = "0.5"
 log = "0.4.17"
 rand = "0.7.0"
 rayon = "1.5.3"
-solana-client = { path = "../client", version = "=1.15.1" }
-solana-core = { path = "../core", version = "=1.15.1" }
-solana-gossip = { path = "../gossip", version = "=1.15.1" }
-solana-ledger = { path = "../ledger", version = "=1.15.1" }
-solana-logger = { path = "../logger", version = "=1.15.1" }
-solana-measure = { path = "../measure", version = "=1.15.1" }
-solana-perf = { path = "../perf", version = "=1.15.1" }
-solana-poh = { path = "../poh", version = "=1.15.1" }
-solana-runtime = { path = "../runtime", version = "=1.15.1" }
-solana-sdk = { path = "../sdk", version = "=1.15.1" }
-solana-streamer = { path = "../streamer", version = "=1.15.1" }
-solana-tpu-client = { path = "../tpu-client", version = "=1.15.1", default-features = false }
-solana-version = { path = "../version", version = "=1.15.1" }
+solana-client = { path = "../client", version = "*" }
+solana-core = { path = "../core", version = "*" }
+solana-gossip = { path = "../gossip", version = "*" }
+solana-ledger = { path = "../ledger", version = "*" }
+solana-logger = { path = "../logger", version = "*" }
+solana-measure = { path = "../measure", version = "*" }
+solana-perf = { path = "../perf", version = "*" }
+solana-poh = { path = "../poh", version = "*" }
+solana-runtime = { path = "../runtime", version = "*" }
+solana-sdk = { path = "../sdk", version = "*" }
+solana-streamer = { path = "../streamer", version = "*" }
+solana-tpu-client = { path = "../tpu-client", version = "*", default-features = false }
+solana-version = { path = "../version", version = "*" }
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

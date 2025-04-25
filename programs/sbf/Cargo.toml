@@ -26,22 +26,22 @@ itertools = "0.10.1"
 log = "0.4.11"
 miow = "0.3.6"
 net2 = "0.2.37"
-solana-account-decoder = { path = "../../account-decoder", version = "=1.15.1" }
-solana-bpf-loader-program = { path = "../bpf_loader", version = "=1.15.1" }
-solana-cli-output = { path = "../../cli-output", version = "=1.15.1" }
-solana-logger = { path = "../../logger", version = "=1.15.1" }
-solana-measure = { path = "../../measure", version = "=1.15.1" }
-solana-program-runtime = { path = "../../program-runtime", version = "=1.15.1" }
-solana-runtime = { path = "../../runtime", version = "=1.15.1" }
-solana-sbf-rust-invoke = { path = "rust/invoke", version = "=1.15.1" }
-solana-sbf-rust-realloc = { path = "rust/realloc", version = "=1.15.1" }
-solana-sbf-rust-realloc-invoke = { path = "rust/realloc_invoke", version = "=1.15.1" }
-solana-sdk = { path = "../../sdk", version = "=1.15.1" }
-solana-transaction-status = { path = "../../transaction-status", version = "=1.15.1" }
+solana-account-decoder = { path = "../../account-decoder", version = "*" }
+solana-bpf-loader-program = { path = "../bpf_loader", version = "*" }
+solana-cli-output = { path = "../../cli-output", version = "*" }
+solana-logger = { path = "../../logger", version = "*" }
+solana-measure = { path = "../../measure", version = "*" }
+solana-program-runtime = { path = "../../program-runtime", version = "*" }
+solana-runtime = { path = "../../runtime", version = "*" }
+solana-sbf-rust-invoke = { path = "rust/invoke", version = "*" }
+solana-sbf-rust-realloc = { path = "rust/realloc", version = "*" }
+solana-sbf-rust-realloc-invoke = { path = "rust/realloc_invoke", version = "*" }
+solana-sdk = { path = "../../sdk", version = "*" }
+solana-transaction-status = { path = "../../transaction-status", version = "*" }
 solana_rbpf = "=0.2.38"
 
 [dev-dependencies]
-solana-ledger = { path = "../../ledger", version = "=1.15.1" }
+solana-ledger = { path = "../../ledger", version = "*" }
 
 [[bench]]
 name = "bpf_loader"

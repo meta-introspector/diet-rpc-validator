@@ -34,26 +34,26 @@ rayon = "1.5.3"
 reed-solomon-erasure = { version = "6.0.0", features = ["simd-accel"] }
 serde = "1.0.144"
 serde_bytes = "0.11.7"
-sha2 = "0.10.5"
-solana-account-decoder = { path = "../account-decoder", version = "=1.15.1" }
-solana-bpf-loader-program = { path = "../programs/bpf_loader", version = "=1.15.1" }
-solana-entry = { path = "../entry", version = "=1.15.1" }
-solana-frozen-abi = { path = "../frozen-abi", version = "=1.15.1" }
-solana-frozen-abi-macro = { path = "../frozen-abi/macro", version = "=1.15.1" }
-solana-measure = { path = "../measure", version = "=1.15.1" }
-solana-metrics = { path = "../metrics", version = "=1.15.1" }
-solana-perf = { path = "../perf", version = "=1.15.1" }
-solana-program-runtime = { path = "../program-runtime", version = "=1.15.1" }
-solana-rayon-threadlimit = { path = "../rayon-threadlimit", version = "=1.15.1" }
-solana-runtime = { path = "../runtime", version = "=1.15.1" }
-solana-sdk = { path = "../sdk", version = "=1.15.1" }
-solana-stake-program = { path = "../programs/stake", version = "=1.15.1" }
-solana-storage-bigtable = { path = "../storage-bigtable", version = "=1.15.1" }
-solana-storage-proto = { path = "../storage-proto", version = "=1.15.1" }
-solana-transaction-status = { path = "../transaction-status", version = "=1.15.1" }
-solana-vote-program = { path = "../programs/vote", version = "=1.15.1" }
-spl-token = { version = "=3.5.0", features = ["no-entrypoint"] }
-spl-token-2022 = { version = "=0.5.0", features = ["no-entrypoint"] }
+sha2 = "*"
+solana-account-decoder = { path = "../account-decoder", version = "*" }
+solana-bpf-loader-program = { path = "../programs/bpf_loader", version = "*" }
+solana-entry = { path = "../entry", version = "*" }
+solana-frozen-abi = { path = "../frozen-abi", version = "*" }
+solana-frozen-abi-macro = { path = "../frozen-abi/macro", version = "*" }
+solana-measure = { path = "../measure", version = "*" }
+solana-metrics = { path = "../metrics", version = "*" }
+solana-perf = { path = "../perf", version = "*" }
+solana-program-runtime = { path = "../program-runtime", version = "*" }
+solana-rayon-threadlimit = { path = "../rayon-threadlimit", version = "*" }
+solana-runtime = { path = "../runtime", version = "*" }
+solana-sdk = { path = "../sdk", version = "*" }
+solana-stake-program = { path = "../programs/stake", version = "*" }
+solana-storage-bigtable = { path = "../storage-bigtable", version = "*" }
+solana-storage-proto = { path = "../storage-proto", version = "*" }
+solana-transaction-status = { path = "../transaction-status", version = "*" }
+solana-vote-program = { path = "../programs/vote", version = "*" }
+spl-token = { version = "*", features = ["no-entrypoint"] }
+spl-token-2022 = { version = "*", features = ["no-entrypoint"] }
 static_assertions = "1.1.0"
 tempfile = "3.3.0"
 thiserror = "1.0"
@@ -64,15 +64,15 @@ trees = "0.4.2"
 [dependencies.rocksdb]
 # Avoid the vendored bzip2 within rocksdb-sys that can cause linker conflicts
 # when also using the bzip2 crate
-version = "0.19.0"
+version = "*"
 default-features = false
 features = ["lz4"]
 
 [dev-dependencies]
 bs58 = "0.4.0"
 matches = "0.1.9"
-solana-account-decoder = { path = "../account-decoder", version = "=1.15.1" }
-solana-logger = { path = "../logger", version = "=1.15.1" }
+solana-account-decoder = { path = "../account-decoder", version = "*" }
+solana-logger = { path = "../logger", version = "*" }
 test-case = "2.2.2"
 
 [build-dependencies]

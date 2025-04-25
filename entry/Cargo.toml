@@ -19,16 +19,16 @@ log = "0.4.17"
 rand = "0.7.0"
 rayon = "1.5.3"
 serde = "1.0.144"
-solana-measure = { path = "../measure", version = "=1.15.1" }
-solana-merkle-tree = { path = "../merkle-tree", version = "=1.15.1" }
-solana-metrics = { path = "../metrics", version = "=1.15.1" }
-solana-perf = { path = "../perf", version = "=1.15.1" }
-solana-rayon-threadlimit = { path = "../rayon-threadlimit", version = "=1.15.1" }
-solana-sdk = { path = "../sdk", version = "=1.15.1" }
+solana-measure = { path = "../measure", version = "*" }
+solana-merkle-tree = { path = "../merkle-tree", version = "*" }
+solana-metrics = { path = "../metrics", version = "*" }
+solana-perf = { path = "../perf", version = "*" }
+solana-rayon-threadlimit = { path = "../rayon-threadlimit", version = "*" }
+solana-sdk = { path = "../sdk", version = "*" }
 
 [dev-dependencies]
 matches = "0.1.9"
-solana-logger = { path = "../logger", version = "=1.15.1" }
+solana-logger = { path = "../logger", version = "*" }
 
 [lib]
 crate-type = ["lib"]
