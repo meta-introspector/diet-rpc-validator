@@ -22,7 +22,7 @@ futures = "0.3"
 serde_json = "1.0.83"
 solana-account-decoder = { path = "../account-decoder", version = "=1.15.1" }
 solana-rpc-client-api = { path = "../rpc-client-api", version = "=1.15.1" }
-tokio = { version = "1", features = ["full"] }
+tokio = { version = "*", features = ["full"] }
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

@@ -13,26 +13,26 @@ clap = "2.33.1"
 log = "0.4.17"
 rand = "0.7.0"
 rayon = "1.5.3"
-solana-account-decoder = { path = "../account-decoder", version = "=1.15.1" }
-solana-clap-utils = { path = "../clap-utils", version = "=1.15.1" }
-solana-client = { path = "../client", version = "=1.15.1" }
-solana-faucet = { path = "../faucet", version = "=1.15.1" }
-solana-gossip = { path = "../gossip", version = "=1.15.1" }
-solana-logger = { path = "../logger", version = "=1.15.1" }
-solana-measure = { path = "../measure", version = "=1.15.1" }
-solana-net-utils = { path = "../net-utils", version = "=1.15.1" }
-solana-rpc-client = { path = "../rpc-client", version = "=1.15.1" }
-solana-runtime = { path = "../runtime", version = "=1.15.1" }
-solana-sdk = { path = "../sdk", version = "=1.15.1" }
-solana-streamer = { path = "../streamer", version = "=1.15.1" }
-solana-transaction-status = { path = "../transaction-status", version = "=1.15.1" }
-solana-version = { path = "../version", version = "=1.15.1" }
-spl-token = { version = "=3.5.0", features = ["no-entrypoint"] }
+solana-account-decoder = { path = "../account-decoder", version = "*" }
+solana-clap-utils = { path = "../clap-utils", version = "*" }
+solana-client = { path = "../client", version = "*" }
+solana-faucet = { path = "../faucet", version = "*" }
+solana-gossip = { path = "../gossip", version = "*" }
+solana-logger = { path = "../logger", version = "*" }
+solana-measure = { path = "../measure", version = "*" }
+solana-net-utils = { path = "../net-utils", version = "*" }
+solana-rpc-client = { path = "../rpc-client", version = "*" }
+solana-runtime = { path = "../runtime", version = "*" }
+solana-sdk = { path = "../sdk", version = "*" }
+solana-streamer = { path = "../streamer", version = "*" }
+solana-transaction-status = { path = "../transaction-status", version = "*" }
+solana-version = { path = "../version", version = "*" }
+spl-token = { version = "*", features = ["no-entrypoint"] }
 
 [dev-dependencies]
-solana-core = { path = "../core", version = "=1.15.1" }
-solana-local-cluster = { path = "../local-cluster", version = "=1.15.1" }
-solana-test-validator = { path = "../test-validator", version = "=1.15.1" }
+solana-core = { path = "../core", version = "*" }
+solana-local-cluster = { path = "../local-cluster", version = "*" }
+solana-test-validator = { path = "../test-validator", version = "*" }
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]

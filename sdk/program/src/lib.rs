@@ -468,8 +468,9 @@
 //! [lut]: https://docs.solana.com/proposals/versioned-transactions
 
 #![allow(incomplete_features)]
-#![cfg_attr(RUSTC_WITH_SPECIALIZATION, feature(specialization))]
-#![cfg_attr(RUSTC_NEEDS_PROC_MACRO_HYGIENE, feature(proc_macro_hygiene))]
+//#![cfg_attr(RUSTC_WITH_SPECIALIZATION, feature(specialization))]
+//#![cfg_attr(RUSTC_NEEDS_PROC_MACRO_HYGIENE, feature(proc_macro_hygiene))]
+#![feature(proc_macro_hygiene)]
 
 // Allows macro expansion of `use ::solana_program::*` to work within this crate
 extern crate self as solana_program;
@@ -529,13 +530,13 @@ pub mod sysvar;
 pub mod vote;
 pub mod wasm;
 
-#[cfg(target_os = "solana")]
+//#[cfg(target_os = "solana")]
 pub use solana_sdk_macro::wasm_bindgen_stub as wasm_bindgen;
 /// Re-export of [wasm-bindgen].
 ///
 /// [wasm-bindgen]: https://rustwasm.github.io/docs/wasm-bindgen/
-#[cfg(not(target_os = "solana"))]
-pub use wasm_bindgen::prelude::wasm_bindgen;
+//#[cfg(not(target_os = "solana"))]
+//pub use wasm_bindgen::prelude::wasm_bindgen;
 
 /// The [config native program][np].
 ///
@@ -749,7 +750,7 @@ macro_rules! unchecked_div_by_const {
 // `solana_program`'s top-level modules, if this module is not lexically last
 // rustdoc fails to generate documentation for the re-exports within
 // `solana_sdk`.
-#[cfg(not(target_os = "solana"))]
+//#[cfg(not(target_os = "solana"))]
 pub mod example_mocks;
 
 #[cfg(test)]

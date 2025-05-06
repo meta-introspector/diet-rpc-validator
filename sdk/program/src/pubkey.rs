@@ -140,14 +140,14 @@ impl TryFrom<&str> for Pubkey {
 }
 
 pub fn bytes_are_curve_point<T: AsRef<[u8]>>(_bytes: T) -> bool {
-    #[cfg(not(target_os = "solana"))]
+//    #[cfg(not(target_os = "solana"))]
     {
         curve25519_dalek::edwards::CompressedEdwardsY::from_slice(_bytes.as_ref())
             .decompress()
             .is_some()
     }
-    #[cfg(target_os = "solana")]
-    unimplemented!();
+//    #[cfg(target_os = "solana")]
+//    unimplemented!();
 }
 
 impl Pubkey {
@@ -163,7 +163,7 @@ impl Pubkey {
     }
 
     #[deprecated(since = "1.3.9", note = "Please use 'Pubkey::new_unique' instead")]
-    #[cfg(not(target_os = "solana"))]
+//    #[cfg(not(target_os = "solana"))]
     pub fn new_rand() -> Self {
         // Consider removing Pubkey::new_rand() entirely in the v1.5 or v1.6 timeframe
         Pubkey::new(&rand::random::<[u8; 32]>())
@@ -476,30 +476,30 @@ impl Pubkey {
     pub fn try_find_program_address(seeds: &[&[u8]], program_id: &Pubkey) -> Option<(Pubkey, u8)> {
         // Perform the calculation inline, calling this from within a program is
         // not supported
-        #[cfg(not(target_os = "solana"))]
-        {
-            let mut bump_seed = [std::u8::MAX];
-            for _ in 0..std::u8::MAX {
-                {
-                    let mut seeds_with_bump = seeds.to_vec();
-                    seeds_with_bump.push(&bump_seed);
-                    match Self::create_program_address(&seeds_with_bump, program_id) {
-                        Ok(address) => return Some((address, bump_seed[0])),
-                        Err(PubkeyError::InvalidSeeds) => (),
-                        _ => break,
-                    }
-                }
-                bump_seed[0] -= 1;
-            }
-            None
-        }
+//        #[cfg(not(target_os = "solana"))]
+        // {
+        //     let mut bump_seed = [std::u8::MAX];
+        //     for _ in 0..std::u8::MAX {
+        //         {
+        //             let mut seeds_with_bump = seeds.to_vec();
+        //             seeds_with_bump.push(&bump_seed);
+        //             match Self::create_program_address(&seeds_with_bump, program_id) {
+        //                 Ok(address) => return Some((address, bump_seed[0])),
+        //                 Err(PubkeyError::InvalidSeeds) => (),
+        //                 _ => break,
+        //             }
+        //         }
+        //         bump_seed[0] -= 1;
+        //     }
+        //     None
+        // }
         // Call via a system call to perform the calculation
-        #[cfg(target_os = "solana")]
+//        #[cfg(target_os = "solana")]
         {
             let mut bytes = [0; 32];
             let mut bump_seed = std::u8::MAX;
             let result = unsafe {
-                crate::syscalls::sol_try_find_program_address(
+                Pubkey::find_program_address(
                     seeds as *const _ as *const u8,
                     seeds.len() as u64,
                     program_id as *const _ as *const u8,
@@ -571,27 +571,27 @@ impl Pubkey {
 
         // Perform the calculation inline, calling this from within a program is
         // not supported
-        #[cfg(not(target_os = "solana"))]
-        {
-            let mut hasher = crate::hash::Hasher::default();
-            for seed in seeds.iter() {
-                hasher.hash(seed);
-            }
-            hasher.hashv(&[program_id.as_ref(), PDA_MARKER]);
-            let hash = hasher.result();
+//        #[cfg(not(target_os = "solana"))]
+        // {
+        //     let mut hasher = crate::hash::Hasher::default();
+        //     for seed in seeds.iter() {
+        //         hasher.hash(seed);
+        //     }
+        //     hasher.hashv(&[program_id.as_ref(), PDA_MARKER]);
+        //     let hash = hasher.result();
 
-            if bytes_are_curve_point(hash) {
-                return Err(PubkeyError::InvalidSeeds);
-            }
+        //     if bytes_are_curve_point(hash) {
+        //         return Err(PubkeyError::InvalidSeeds);
+        //     }
 
-            Ok(Pubkey::new(hash.as_ref()))
-        }
-        // Call via a system call to perform the calculation
-        #[cfg(target_os = "solana")]
+        //     Ok(Pubkey::new(hash.as_ref()))
+        // }
+        // // Call via a system call to perform the calculation
+//        #[cfg(target_os = "solana")]
         {
             let mut bytes = [0; 32];
             let result = unsafe {
-                crate::syscalls::sol_create_program_address(
+                Pubkey::create_program_address(
                     seeds as *const _ as *const u8,
                     seeds.len() as u64,
                     program_id as *const _ as *const u8,
@@ -615,13 +615,13 @@ impl Pubkey {
 
     /// Log a `Pubkey` from a program
     pub fn log(&self) {
-        #[cfg(target_os = "solana")]
+//        #[cfg(target_os = "solana")]
         unsafe {
             crate::syscalls::sol_log_pubkey(self.as_ref() as *const _ as *const u8)
         };
 
-        #[cfg(not(target_os = "solana"))]
-        crate::program_stubs::sol_log(&self.to_string());
+//        #[cfg(not(target_os = "solana"))]
+//        crate::program_stubs::sol_log(&self.to_string());
     }
 }
 

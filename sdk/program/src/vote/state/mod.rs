@@ -1,5 +1,7 @@
 //! Vote state
 
+//use solana-frozen-abi::AbiExample
+
 #[cfg(test)]
 use crate::epoch_schedule::MAX_LEADER_SCHEDULE_EPOCH_OFFSET;
 use {

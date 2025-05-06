@@ -1,14 +1,14 @@
 //! Data shared between program runtime and built-in programs as well as SBF programs.
 #![deny(clippy::indexing_slicing)]
 
-#[cfg(not(target_os = "solana"))]
-use crate::{
-    account::WritableAccount,
-    rent::Rent,
-    system_instruction::{
-        MAX_PERMITTED_ACCOUNTS_DATA_ALLOCATIONS_PER_TRANSACTION, MAX_PERMITTED_DATA_LENGTH,
-    },
-};
+// //#[cfg(not(target_os = "solana"))]
+// use crate::{
+//     account::WritableAccount,
+//     rent::Rent,
+//     system_instruction::{
+//         MAX_PERMITTED_ACCOUNTS_DATA_ALLOCATIONS_PER_TRANSACTION, MAX_PERMITTED_DATA_LENGTH,
+//     },
+// };
 use {
     crate::{
         account::{AccountSharedData, ReadableAccount},
@@ -56,7 +56,7 @@ pub type TransactionAccount = (Pubkey, AccountSharedData);
 pub struct TransactionContext {
     account_keys: Pin<Box<[Pubkey]>>,
     accounts: Pin<Box<[RefCell<AccountSharedData>]>>,
-    #[cfg(not(target_os = "solana"))]
+//    #[cfg(not(target_os = "solana"))]
     account_touched_flags: RefCell<Pin<Box<[bool]>>>,
     instruction_stack_capacity: usize,
     instruction_trace_capacity: usize,
@@ -64,59 +64,59 @@ pub struct TransactionContext {
     instruction_trace: Vec<InstructionContext>,
     return_data: TransactionReturnData,
     accounts_resize_delta: RefCell<i64>,
-    #[cfg(not(target_os = "solana"))]
+//    #[cfg(not(target_os = "solana"))]
     rent: Option<Rent>,
-    #[cfg(not(target_os = "solana"))]
+//    #[cfg(not(target_os = "solana"))]
     is_cap_accounts_data_allocations_per_transaction_enabled: bool,
 }
 
 impl TransactionContext {
     /// Constructs a new TransactionContext
-    #[cfg(not(target_os = "solana"))]
-    pub fn new(
-        transaction_accounts: Vec<TransactionAccount>,
-        rent: Option<Rent>,
-        instruction_stack_capacity: usize,
-        instruction_trace_capacity: usize,
-    ) -> Self {
-        let (account_keys, accounts): (Vec<Pubkey>, Vec<RefCell<AccountSharedData>>) =
-            transaction_accounts
-                .into_iter()
-                .map(|(key, account)| (key, RefCell::new(account)))
-                .unzip();
-        let account_touched_flags = vec![false; accounts.len()];
-        Self {
-            account_keys: Pin::new(account_keys.into_boxed_slice()),
-            accounts: Pin::new(accounts.into_boxed_slice()),
-            account_touched_flags: RefCell::new(Pin::new(account_touched_flags.into_boxed_slice())),
-            instruction_stack_capacity,
-            instruction_trace_capacity,
-            instruction_stack: Vec::with_capacity(instruction_stack_capacity),
-            instruction_trace: vec![InstructionContext::default()],
-            return_data: TransactionReturnData::default(),
-            accounts_resize_delta: RefCell::new(0),
-            rent,
-            is_cap_accounts_data_allocations_per_transaction_enabled: false,
-        }
-    }
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn new(
+    //     transaction_accounts: Vec<TransactionAccount>,
+    //     rent: Option<Rent>,
+    //     instruction_stack_capacity: usize,
+    //     instruction_trace_capacity: usize,
+    // ) -> Self {
+    //     let (account_keys, accounts): (Vec<Pubkey>, Vec<RefCell<AccountSharedData>>) =
+    //         transaction_accounts
+    //             .into_iter()
+    //             .map(|(key, account)| (key, RefCell::new(account)))
+    //             .unzip();
+    //     let account_touched_flags = vec![false; accounts.len()];
+    //     Self {
+    //         account_keys: Pin::new(account_keys.into_boxed_slice()),
+    //         accounts: Pin::new(accounts.into_boxed_slice()),
+    //         account_touched_flags: RefCell::new(Pin::new(account_touched_flags.into_boxed_slice())),
+    //         instruction_stack_capacity,
+    //         instruction_trace_capacity,
+    //         instruction_stack: Vec::with_capacity(instruction_stack_capacity),
+    //         instruction_trace: vec![InstructionContext::default()],
+    //         return_data: TransactionReturnData::default(),
+    //         accounts_resize_delta: RefCell::new(0),
+    //         rent,
+    //         is_cap_accounts_data_allocations_per_transaction_enabled: false,
+    //     }
+    // }
 
-    /// Used in mock_process_instruction
-    #[cfg(not(target_os = "solana"))]
-    pub fn deconstruct_without_keys(self) -> Result<Vec<AccountSharedData>, InstructionError> {
-        if !self.instruction_stack.is_empty() {
-            return Err(InstructionError::CallDepth);
-        }
-        Ok(Vec::from(Pin::into_inner(self.accounts))
-            .into_iter()
-            .map(|account| account.into_inner())
-            .collect())
-    }
+    // /// Used in mock_process_instruction
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn deconstruct_without_keys(self) -> Result<Vec<AccountSharedData>, InstructionError> {
+    //     if !self.instruction_stack.is_empty() {
+    //         return Err(InstructionError::CallDepth);
+    //     }
+    //     Ok(Vec::from(Pin::into_inner(self.accounts))
+    //         .into_iter()
+    //         .map(|account| account.into_inner())
+    //         .collect())
+    // }
 
-    /// Returns true if `enable_early_verification_of_account_modifications` is active
-    #[cfg(not(target_os = "solana"))]
-    pub fn is_early_verification_of_account_modifications_enabled(&self) -> bool {
-        self.rent.is_some()
-    }
+    // /// Returns true if `enable_early_verification_of_account_modifications` is active
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn is_early_verification_of_account_modifications_enabled(&self) -> bool {
+    //     self.rent.is_some()
+    // }
 
     /// Returns the total number of accounts loaded in this Transaction
     pub fn get_number_of_accounts(&self) -> IndexOfAccount {
@@ -229,81 +229,81 @@ impl TransactionContext {
     }
 
     /// Pushes the next InstructionContext
-    #[cfg(not(target_os = "solana"))]
-    pub fn push(&mut self) -> Result<(), InstructionError> {
-        let nesting_level = self.get_instruction_context_stack_height();
-        let caller_instruction_context = self
-            .instruction_trace
-            .last()
-            .ok_or(InstructionError::CallDepth)?;
-        let callee_instruction_accounts_lamport_sum =
-            self.instruction_accounts_lamport_sum(caller_instruction_context)?;
-        if !self.instruction_stack.is_empty()
-            && self.is_early_verification_of_account_modifications_enabled()
-        {
-            let caller_instruction_context = self.get_current_instruction_context()?;
-            let original_caller_instruction_accounts_lamport_sum =
-                caller_instruction_context.instruction_accounts_lamport_sum;
-            let current_caller_instruction_accounts_lamport_sum =
-                self.instruction_accounts_lamport_sum(caller_instruction_context)?;
-            if original_caller_instruction_accounts_lamport_sum
-                != current_caller_instruction_accounts_lamport_sum
-            {
-                return Err(InstructionError::UnbalancedInstruction);
-            }
-        }
-        {
-            let mut instruction_context = self.get_next_instruction_context()?;
-            instruction_context.nesting_level = nesting_level;
-            instruction_context.instruction_accounts_lamport_sum =
-                callee_instruction_accounts_lamport_sum;
-        }
-        let index_in_trace = self.get_instruction_trace_length();
-        if index_in_trace >= self.instruction_trace_capacity {
-            return Err(InstructionError::MaxInstructionTraceLengthExceeded);
-        }
-        self.instruction_trace.push(InstructionContext::default());
-        if nesting_level >= self.instruction_stack_capacity {
-            return Err(InstructionError::CallDepth);
-        }
-        self.instruction_stack.push(index_in_trace);
-        Ok(())
-    }
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn push(&mut self) -> Result<(), InstructionError> {
+    //     let nesting_level = self.get_instruction_context_stack_height();
+    //     let caller_instruction_context = self
+    //         .instruction_trace
+    //         .last()
+    //         .ok_or(InstructionError::CallDepth)?;
+    //     let callee_instruction_accounts_lamport_sum =
+    //         self.instruction_accounts_lamport_sum(caller_instruction_context)?;
+    //     if !self.instruction_stack.is_empty()
+    //         && self.is_early_verification_of_account_modifications_enabled()
+    //     {
+    //         let caller_instruction_context = self.get_current_instruction_context()?;
+    //         let original_caller_instruction_accounts_lamport_sum =
+    //             caller_instruction_context.instruction_accounts_lamport_sum;
+    //         let current_caller_instruction_accounts_lamport_sum =
+    //             self.instruction_accounts_lamport_sum(caller_instruction_context)?;
+    //         if original_caller_instruction_accounts_lamport_sum
+    //             != current_caller_instruction_accounts_lamport_sum
+    //         {
+    //             return Err(InstructionError::UnbalancedInstruction);
+    //         }
+    //     }
+    //     {
+    //         let mut instruction_context = self.get_next_instruction_context()?;
+    //         instruction_context.nesting_level = nesting_level;
+    //         instruction_context.instruction_accounts_lamport_sum =
+    //             callee_instruction_accounts_lamport_sum;
+    //     }
+    //     let index_in_trace = self.get_instruction_trace_length();
+    //     if index_in_trace >= self.instruction_trace_capacity {
+    //         return Err(InstructionError::MaxInstructionTraceLengthExceeded);
+    //     }
+    //     self.instruction_trace.push(InstructionContext::default());
+    //     if nesting_level >= self.instruction_stack_capacity {
+    //         return Err(InstructionError::CallDepth);
+    //     }
+    //     self.instruction_stack.push(index_in_trace);
+    //     Ok(())
+    // }
 
-    /// Pops the current InstructionContext
-    #[cfg(not(target_os = "solana"))]
-    pub fn pop(&mut self) -> Result<(), InstructionError> {
-        if self.instruction_stack.is_empty() {
-            return Err(InstructionError::CallDepth);
-        }
-        // Verify (before we pop) that the total sum of all lamports in this instruction did not change
-        let detected_an_unbalanced_instruction =
-            if self.is_early_verification_of_account_modifications_enabled() {
-                self.get_current_instruction_context()
-                    .and_then(|instruction_context| {
-                        // Verify all executable accounts have no outstanding refs
-                        for account_index in instruction_context.program_accounts.iter() {
-                            self.get_account_at_index(*account_index)?
-                                .try_borrow_mut()
-                                .map_err(|_| InstructionError::AccountBorrowOutstanding)?;
-                        }
-                        self.instruction_accounts_lamport_sum(instruction_context)
-                            .map(|instruction_accounts_lamport_sum| {
-                                instruction_context.instruction_accounts_lamport_sum
-                                    != instruction_accounts_lamport_sum
-                            })
-                    })
-            } else {
-                Ok(false)
-            };
-        // Always pop, even if we `detected_an_unbalanced_instruction`
-        self.instruction_stack.pop();
-        if detected_an_unbalanced_instruction? {
-            Err(InstructionError::UnbalancedInstruction)
-        } else {
-            Ok(())
-        }
-    }
+    // /// Pops the current InstructionContext
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn pop(&mut self) -> Result<(), InstructionError> {
+    //     if self.instruction_stack.is_empty() {
+    //         return Err(InstructionError::CallDepth);
+    //     }
+    //     // Verify (before we pop) that the total sum of all lamports in this instruction did not change
+    //     let detected_an_unbalanced_instruction =
+    //         if self.is_early_verification_of_account_modifications_enabled() {
+    //             self.get_current_instruction_context()
+    //                 .and_then(|instruction_context| {
+    //                     // Verify all executable accounts have no outstanding refs
+    //                     for account_index in instruction_context.program_accounts.iter() {
+    //                         self.get_account_at_index(*account_index)?
+    //                             .try_borrow_mut()
+    //                             .map_err(|_| InstructionError::AccountBorrowOutstanding)?;
+    //                     }
+    //                     self.instruction_accounts_lamport_sum(instruction_context)
+    //                         .map(|instruction_accounts_lamport_sum| {
+    //                             instruction_context.instruction_accounts_lamport_sum
+    //                                 != instruction_accounts_lamport_sum
+    //                         })
+    //                 })
+    //         } else {
+    //             Ok(false)
+    //         };
+    //     // Always pop, even if we `detected_an_unbalanced_instruction`
+    //     self.instruction_stack.pop();
+    //     if detected_an_unbalanced_instruction? {
+    //         Err(InstructionError::UnbalancedInstruction)
+    //     } else {
+    //         Ok(())
+    //     }
+    // }
 
     /// Gets the return data of the current InstructionContext or any above
     pub fn get_return_data(&self) -> (&Pubkey, &[u8]) {
@@ -321,35 +321,35 @@ impl TransactionContext {
     }
 
     /// Calculates the sum of all lamports within an instruction
-    #[cfg(not(target_os = "solana"))]
-    fn instruction_accounts_lamport_sum(
-        &self,
-        instruction_context: &InstructionContext,
-    ) -> Result<u128, InstructionError> {
-        if !self.is_early_verification_of_account_modifications_enabled() {
-            return Ok(0);
-        }
-        let mut instruction_accounts_lamport_sum: u128 = 0;
-        for instruction_account_index in 0..instruction_context.get_number_of_instruction_accounts()
-        {
-            if instruction_context
-                .is_instruction_account_duplicate(instruction_account_index)?
-                .is_some()
-            {
-                continue; // Skip duplicate account
-            }
-            let index_in_transaction = instruction_context
-                .get_index_of_instruction_account_in_transaction(instruction_account_index)?;
-            instruction_accounts_lamport_sum = (self
-                .get_account_at_index(index_in_transaction)?
-                .try_borrow()
-                .map_err(|_| InstructionError::AccountBorrowOutstanding)?
-                .lamports() as u128)
-                .checked_add(instruction_accounts_lamport_sum)
-                .ok_or(InstructionError::ArithmeticOverflow)?;
-        }
-        Ok(instruction_accounts_lamport_sum)
-    }
+    // #[cfg(not(target_os = "solana"))]
+    // fn instruction_accounts_lamport_sum(
+    //     &self,
+    //     instruction_context: &InstructionContext,
+    // ) -> Result<u128, InstructionError> {
+    //     if !self.is_early_verification_of_account_modifications_enabled() {
+    //         return Ok(0);
+    //     }
+    //     let mut instruction_accounts_lamport_sum: u128 = 0;
+    //     for instruction_account_index in 0..instruction_context.get_number_of_instruction_accounts()
+    //     {
+    //         if instruction_context
+    //             .is_instruction_account_duplicate(instruction_account_index)?
+    //             .is_some()
+    //         {
+    //             continue; // Skip duplicate account
+    //         }
+    //         let index_in_transaction = instruction_context
+    //             .get_index_of_instruction_account_in_transaction(instruction_account_index)?;
+    //         instruction_accounts_lamport_sum = (self
+    //             .get_account_at_index(index_in_transaction)?
+    //             .try_borrow()
+    //             .map_err(|_| InstructionError::AccountBorrowOutstanding)?
+    //             .lamports() as u128)
+    //             .checked_add(instruction_accounts_lamport_sum)
+    //             .ok_or(InstructionError::ArithmeticOverflow)?;
+    //     }
+    //     Ok(instruction_accounts_lamport_sum)
+    // }
 
     /// Returns the accounts resize delta
     pub fn accounts_resize_delta(&self) -> Result<i64, InstructionError> {
@@ -360,10 +360,10 @@ impl TransactionContext {
     }
 
     /// Enables enforcing a maximum accounts data allocation size per transaction
-    #[cfg(not(target_os = "solana"))]
-    pub fn enable_cap_accounts_data_allocations_per_transaction(&mut self) {
-        self.is_cap_accounts_data_allocations_per_transaction_enabled = true;
-    }
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn enable_cap_accounts_data_allocations_per_transaction(&mut self) {
+    //     self.is_cap_accounts_data_allocations_per_transaction_enabled = true;
+    // }
 }
 
 /// Return data at the end of a transaction
@@ -387,17 +387,17 @@ pub struct InstructionContext {
 
 impl InstructionContext {
     /// Used together with TransactionContext::get_next_instruction_context()
-    #[cfg(not(target_os = "solana"))]
-    pub fn configure(
-        &mut self,
-        program_accounts: &[IndexOfAccount],
-        instruction_accounts: &[InstructionAccount],
-        instruction_data: &[u8],
-    ) {
-        self.program_accounts = program_accounts.to_vec();
-        self.instruction_accounts = instruction_accounts.to_vec();
-        self.instruction_data = instruction_data.to_vec();
-    }
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn configure(
+    //     &mut self,
+    //     program_accounts: &[IndexOfAccount],
+    //     instruction_accounts: &[InstructionAccount],
+    //     instruction_data: &[u8],
+    // ) {
+    //     self.program_accounts = program_accounts.to_vec();
+    //     self.instruction_accounts = instruction_accounts.to_vec();
+    //     self.instruction_data = instruction_data.to_vec();
+    // }
 
     /// How many Instructions were on the stack after this one was pushed
     ///
@@ -665,37 +665,37 @@ impl<'a> BorrowedAccount<'a> {
     }
 
     /// Assignes the owner of this account (transaction wide)
-    #[cfg(not(target_os = "solana"))]
-    pub fn set_owner(&mut self, pubkey: &[u8]) -> Result<(), InstructionError> {
-        if self
-            .transaction_context
-            .is_early_verification_of_account_modifications_enabled()
-        {
-            // Only the owner can assign a new owner
-            if !self.is_owned_by_current_program() {
-                return Err(InstructionError::ModifiedProgramId);
-            }
-            // and only if the account is writable
-            if !self.is_writable() {
-                return Err(InstructionError::ModifiedProgramId);
-            }
-            // and only if the account is not executable
-            if self.is_executable() {
-                return Err(InstructionError::ModifiedProgramId);
-            }
-            // and only if the data is zero-initialized or empty
-            if !is_zeroed(self.get_data()) {
-                return Err(InstructionError::ModifiedProgramId);
-            }
-            // don't touch the account if the owner does not change
-            if self.get_owner().to_bytes() == pubkey {
-                return Ok(());
-            }
-            self.touch()?;
-        }
-        self.account.copy_into_owner_from_slice(pubkey);
-        Ok(())
-    }
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn set_owner(&mut self, pubkey: &[u8]) -> Result<(), InstructionError> {
+    //     if self
+    //         .transaction_context
+    //         .is_early_verification_of_account_modifications_enabled()
+    //     {
+    //         // Only the owner can assign a new owner
+    //         if !self.is_owned_by_current_program() {
+    //             return Err(InstructionError::ModifiedProgramId);
+    //         }
+    //         // and only if the account is writable
+    //         if !self.is_writable() {
+    //             return Err(InstructionError::ModifiedProgramId);
+    //         }
+    //         // and only if the account is not executable
+    //         if self.is_executable() {
+    //             return Err(InstructionError::ModifiedProgramId);
+    //         }
+    //         // and only if the data is zero-initialized or empty
+    //         if !is_zeroed(self.get_data()) {
+    //             return Err(InstructionError::ModifiedProgramId);
+    //         }
+    //         // don't touch the account if the owner does not change
+    //         if self.get_owner().to_bytes() == pubkey {
+    //             return Ok(());
+    //         }
+    //         self.touch()?;
+    //     }
+    //     self.account.copy_into_owner_from_slice(pubkey);
+    //     Ok(())
+    // }
 
     /// Returns the number of lamports of this account (transaction wide)
     #[inline]
@@ -704,53 +704,53 @@ impl<'a> BorrowedAccount<'a> {
     }
 
     /// Overwrites the number of lamports of this account (transaction wide)
-    #[cfg(not(target_os = "solana"))]
-    pub fn set_lamports(&mut self, lamports: u64) -> Result<(), InstructionError> {
-        if self
-            .transaction_context
-            .is_early_verification_of_account_modifications_enabled()
-        {
-            // An account not owned by the program cannot have its balance decrease
-            if !self.is_owned_by_current_program() && lamports < self.get_lamports() {
-                return Err(InstructionError::ExternalAccountLamportSpend);
-            }
-            // The balance of read-only may not change
-            if !self.is_writable() {
-                return Err(InstructionError::ReadonlyLamportChange);
-            }
-            // The balance of executable accounts may not change
-            if self.is_executable() {
-                return Err(InstructionError::ExecutableLamportChange);
-            }
-            // don't touch the account if the lamports do not change
-            if self.get_lamports() == lamports {
-                return Ok(());
-            }
-            self.touch()?;
-        }
-        self.account.set_lamports(lamports);
-        Ok(())
-    }
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn set_lamports(&mut self, lamports: u64) -> Result<(), InstructionError> {
+    //     if self
+    //         .transaction_context
+    //         .is_early_verification_of_account_modifications_enabled()
+    //     {
+    //         // An account not owned by the program cannot have its balance decrease
+    //         if !self.is_owned_by_current_program() && lamports < self.get_lamports() {
+    //             return Err(InstructionError::ExternalAccountLamportSpend);
+    //         }
+    //         // The balance of read-only may not change
+    //         if !self.is_writable() {
+    //             return Err(InstructionError::ReadonlyLamportChange);
+    //         }
+    //         // The balance of executable accounts may not change
+    //         if self.is_executable() {
+    //             return Err(InstructionError::ExecutableLamportChange);
+    //         }
+    //         // don't touch the account if the lamports do not change
+    //         if self.get_lamports() == lamports {
+    //             return Ok(());
+    //         }
+    //         self.touch()?;
+    //     }
+    //     self.account.set_lamports(lamports);
+    //     Ok(())
+    // }
 
     /// Adds lamports to this account (transaction wide)
-    #[cfg(not(target_os = "solana"))]
-    pub fn checked_add_lamports(&mut self, lamports: u64) -> Result<(), InstructionError> {
-        self.set_lamports(
-            self.get_lamports()
-                .checked_add(lamports)
-                .ok_or(InstructionError::ArithmeticOverflow)?,
-        )
-    }
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn checked_add_lamports(&mut self, lamports: u64) -> Result<(), InstructionError> {
+    //     self.set_lamports(
+    //         self.get_lamports()
+    //             .checked_add(lamports)
+    //             .ok_or(InstructionError::ArithmeticOverflow)?,
+    //     )
+    // }
 
-    /// Subtracts lamports from this account (transaction wide)
-    #[cfg(not(target_os = "solana"))]
-    pub fn checked_sub_lamports(&mut self, lamports: u64) -> Result<(), InstructionError> {
-        self.set_lamports(
-            self.get_lamports()
-                .checked_sub(lamports)
-                .ok_or(InstructionError::ArithmeticOverflow)?,
-        )
-    }
+    // /// Subtracts lamports from this account (transaction wide)
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn checked_sub_lamports(&mut self, lamports: u64) -> Result<(), InstructionError> {
+    //     self.set_lamports(
+    //         self.get_lamports()
+    //             .checked_sub(lamports)
+    //             .ok_or(InstructionError::ArithmeticOverflow)?,
+    //     )
+    // }
 
     /// Returns a read-only slice of the account data (transaction wide)
     #[inline]
@@ -759,12 +759,12 @@ impl<'a> BorrowedAccount<'a> {
     }
 
     /// Returns a writable slice of the account data (transaction wide)
-    #[cfg(not(target_os = "solana"))]
-    pub fn get_data_mut(&mut self) -> Result<&mut [u8], InstructionError> {
-        self.can_data_be_changed()?;
-        self.touch()?;
-        Ok(self.account.data_as_mut_slice())
-    }
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn get_data_mut(&mut self) -> Result<&mut [u8], InstructionError> {
+    //     self.can_data_be_changed()?;
+    //     self.touch()?;
+    //     Ok(self.account.data_as_mut_slice())
+    // }
 
     /// Overwrites the account data and size (transaction wide).
     ///
@@ -772,88 +772,88 @@ impl<'a> BorrowedAccount<'a> {
     /// data with it.
     ///
     /// If you have a slice, use set_data_from_slice().
-    #[cfg(not(target_os = "solana"))]
-    pub fn set_data(&mut self, data: Vec<u8>) -> Result<(), InstructionError> {
-        self.can_data_be_resized(data.len())?;
-        self.can_data_be_changed()?;
-        self.touch()?;
-        self.update_accounts_resize_delta(data.len())?;
-        self.account.set_data(data);
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn set_data(&mut self, data: Vec<u8>) -> Result<(), InstructionError> {
+    //     self.can_data_be_resized(data.len())?;
+    //     self.can_data_be_changed()?;
+    //     self.touch()?;
+    //     self.update_accounts_resize_delta(data.len())?;
+    //     self.account.set_data(data);
 
-        Ok(())
-    }
+    //     Ok(())
+    // }
 
-    /// Overwrites the account data and size (transaction wide).
-    ///
-    /// Call this when you have a slice of data you do not own and want to
-    /// replace the account data with it.
-    ///
-    /// If you have an owned buffer (eg Vec<u8>), use set_data().
-    #[cfg(not(target_os = "solana"))]
-    pub fn set_data_from_slice(&mut self, data: &[u8]) -> Result<(), InstructionError> {
-        self.can_data_be_resized(data.len())?;
-        self.can_data_be_changed()?;
-        self.touch()?;
-        self.update_accounts_resize_delta(data.len())?;
-        self.account.set_data_from_slice(data);
+    // /// Overwrites the account data and size (transaction wide).
+    // ///
+    // /// Call this when you have a slice of data you do not own and want to
+    // /// replace the account data with it.
+    // ///
+    // /// If you have an owned buffer (eg Vec<u8>), use set_data().
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn set_data_from_slice(&mut self, data: &[u8]) -> Result<(), InstructionError> {
+    //     self.can_data_be_resized(data.len())?;
+    //     self.can_data_be_changed()?;
+    //     self.touch()?;
+    //     self.update_accounts_resize_delta(data.len())?;
+    //     self.account.set_data_from_slice(data);
 
-        Ok(())
-    }
+    //     Ok(())
+    // }
 
-    /// Resizes the account data (transaction wide)
-    ///
-    /// Fills it with zeros at the end if is extended or truncates at the end otherwise.
-    #[cfg(not(target_os = "solana"))]
-    pub fn set_data_length(&mut self, new_length: usize) -> Result<(), InstructionError> {
-        self.can_data_be_resized(new_length)?;
-        self.can_data_be_changed()?;
-        // don't touch the account if the length does not change
-        if self.get_data().len() == new_length {
-            return Ok(());
-        }
-        self.touch()?;
-        self.update_accounts_resize_delta(new_length)?;
-        self.account.data_mut().resize(new_length, 0);
-        Ok(())
-    }
+    // /// Resizes the account data (transaction wide)
+    // ///
+    // /// Fills it with zeros at the end if is extended or truncates at the end otherwise.
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn set_data_length(&mut self, new_length: usize) -> Result<(), InstructionError> {
+    //     self.can_data_be_resized(new_length)?;
+    //     self.can_data_be_changed()?;
+    //     // don't touch the account if the length does not change
+    //     if self.get_data().len() == new_length {
+    //         return Ok(());
+    //     }
+    //     self.touch()?;
+    //     self.update_accounts_resize_delta(new_length)?;
+    //     self.account.data_mut().resize(new_length, 0);
+    //     Ok(())
+    // }
 
-    /// Appends all elements in a slice to the account
-    #[cfg(not(target_os = "solana"))]
-    pub fn extend_from_slice(&mut self, data: &[u8]) -> Result<(), InstructionError> {
-        let new_len = self.get_data().len().saturating_add(data.len());
-        self.can_data_be_resized(new_len)?;
-        self.can_data_be_changed()?;
+    // /// Appends all elements in a slice to the account
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn extend_from_slice(&mut self, data: &[u8]) -> Result<(), InstructionError> {
+    //     let new_len = self.get_data().len().saturating_add(data.len());
+    //     self.can_data_be_resized(new_len)?;
+    //     self.can_data_be_changed()?;
 
-        if data.is_empty() {
-            return Ok(());
-        }
+    //     if data.is_empty() {
+    //         return Ok(());
+    //     }
 
-        self.touch()?;
-        self.update_accounts_resize_delta(new_len)?;
-        self.account.data_mut().extend_from_slice(data);
-        Ok(())
-    }
+    //     self.touch()?;
+    //     self.update_accounts_resize_delta(new_len)?;
+    //     self.account.data_mut().extend_from_slice(data);
+    //     Ok(())
+    // }
 
-    /// Deserializes the account data into a state
-    #[cfg(not(target_os = "solana"))]
-    pub fn get_state<T: serde::de::DeserializeOwned>(&self) -> Result<T, InstructionError> {
-        self.account
-            .deserialize_data()
-            .map_err(|_| InstructionError::InvalidAccountData)
-    }
+    // /// Deserializes the account data into a state
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn get_state<T: serde::de::DeserializeOwned>(&self) -> Result<T, InstructionError> {
+    //     self.account
+    //         .deserialize_data()
+    //         .map_err(|_| InstructionError::InvalidAccountData)
+    // }
 
-    /// Serializes a state into the account data
-    #[cfg(not(target_os = "solana"))]
-    pub fn set_state<T: serde::Serialize>(&mut self, state: &T) -> Result<(), InstructionError> {
-        let data = self.get_data_mut()?;
-        let serialized_size =
-            bincode::serialized_size(state).map_err(|_| InstructionError::GenericError)?;
-        if serialized_size > data.len() as u64 {
-            return Err(InstructionError::AccountDataTooSmall);
-        }
-        bincode::serialize_into(&mut *data, state).map_err(|_| InstructionError::GenericError)?;
-        Ok(())
-    }
+    // /// Serializes a state into the account data
+    // #[cfg(not(target_os = "solana"))]
+    // pub fn set_state<T: serde::Serialize>(&mut self, state: &T) -> Result<(), InstructionError> {
+    //     let data = self.get_data_mut()?;
+    //     let serialized_size =
+    //         bincode::serialized_size(state).map_err(|_| InstructionError::GenericError)?;
+    //     if serialized_size > data.len() as u64 {
+    //         return Err(InstructionError::AccountDataTooSmall);
+    //     }
+    //     bincode::serialize_into(&mut *data, state).map_err(|_| InstructionError::GenericError)?;
+    //     Ok(())
+    // }
 
     /// Returns whether this account is executable (transaction wide)
     #[inline]

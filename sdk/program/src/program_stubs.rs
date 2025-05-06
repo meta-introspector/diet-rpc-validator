@@ -1,6 +1,6 @@
 //! Implementations of syscalls used when `solana-program` is built for non-SBF targets.
 
-#![cfg(not(target_os = "solana"))]
+//#![cfg(not(target_os = "solana"))]
 
 use {
     crate::{

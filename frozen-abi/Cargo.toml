@@ -10,6 +10,7 @@ license = "Apache-2.0"
 edition = "2021"
 
 [dependencies]
+ahash = "0.8.11"
 bs58 = "0.4.0"
 bv = { version = "0.11.1", features = ["serde"] }
 lazy_static = "1.4.0"
@@ -19,12 +20,12 @@ serde = { version = "1.0", features = ["derive", "rc"] }
 serde_bytes = "0.11"
 serde_derive = "1.0"
 serde_json = "1.0"
-sha2 = "0.10.5"
+sha2 = "*"
 solana-frozen-abi-macro = { path = "macro", version = "=1.15.1" }
 thiserror = "1.0"
 
-[target.'cfg(not(target_os = "solana"))'.dependencies]
-ahash = { version = "0.7.6", features = ["default", "std"] }
+#[target.'cfg(not(target_os = "solana"))'.dependencies]
+#ahash = { version = "0.8.11", features = ["default", "std"] }
 blake3 = { version = "1.3.1", features = ["digest", "traits-preview"] }
 block-buffer = { version = "0.9.0", features = ["block-padding"] }
 byteorder = { version = "1.4.3", features = ["default", "i128", "std"] }
@@ -40,10 +41,17 @@ im = { version = "15.1.0", features = ["rayon", "serde"] }
 memmap2 = "0.5.3"
 once_cell = { version = "1.13", features = ["alloc", "default", "race", "std"] }
 rand_core = { version = "0.6.3", features = ["alloc", "getrandom", "std"] }
-subtle = { version = "2.4.1", features = ["default", "i128", "std"] }
+subtle = { version = "*", features = ["default", "i128", "std"] }
 
-[target.'cfg(not(target_os = "solana"))'.dev-dependencies]
-solana-logger = { path = "../logger", version = "=1.15.1" }
+#[target.'cfg(not(target_os = "solana"))'.dev-dependencies]
+#solana-logger = { path = "../logger", version = "=1.15.1" }
 
 [build-dependencies]
 rustc_version = "0.4"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(RUSTC_WITHOUT_SPECIALIZATION)'] }
+
+
+
+

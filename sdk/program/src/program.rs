@@ -290,7 +290,7 @@ pub fn invoke_signed_unchecked(
     account_infos: &[AccountInfo],
     signers_seeds: &[&[&[u8]]],
 ) -> ProgramResult {
-    #[cfg(target_os = "solana")]
+//    #[cfg(target_os = "solana")]
     {
         let result = unsafe {
             crate::syscalls::sol_invoke_signed_rust(
@@ -307,8 +307,8 @@ pub fn invoke_signed_unchecked(
         }
     }
 
-    #[cfg(not(target_os = "solana"))]
-    crate::program_stubs::sol_invoke_signed(instruction, account_infos, signers_seeds)
+//    #[cfg(not(target_os = "solana"))]
+//    crate::program_stubs::sol_invoke_signed(instruction, account_infos, signers_seeds)
 }
 
 /// Maximum size that can be set using [`set_return_data`].
@@ -322,13 +322,13 @@ pub const MAX_RETURN_DATA: usize = 1024;
 /// The maximum size of return data is [`MAX_RETURN_DATA`]. Return data is
 /// retrieved by the caller with [`get_return_data`].
 pub fn set_return_data(data: &[u8]) {
-    #[cfg(target_os = "solana")]
+//    #[cfg(target_os = "solana")]
     unsafe {
         crate::syscalls::sol_set_return_data(data.as_ptr(), data.len() as u64)
     };
 
-    #[cfg(not(target_os = "solana"))]
-    crate::program_stubs::sol_set_return_data(data)
+//    #[cfg(not(target_os = "solana"))]
+//    crate::program_stubs::sol_set_return_data(data)
 }
 
 /// Get the return data from an invoked program.
@@ -361,7 +361,7 @@ pub fn set_return_data(data: &[u8]) {
 ///
 /// [rdp]: https://docs.solana.com/proposals/return-data
 pub fn get_return_data() -> Option<(Pubkey, Vec<u8>)> {
-    #[cfg(target_os = "solana")]
+//    #[cfg(target_os = "solana")]
     {
         use std::cmp::min;
 
@@ -384,8 +384,8 @@ pub fn get_return_data() -> Option<(Pubkey, Vec<u8>)> {
         }
     }
 
-    #[cfg(not(target_os = "solana"))]
-    crate::program_stubs::sol_get_return_data()
+//    #[cfg(not(target_os = "solana"))]
+//    crate::program_stubs::sol_get_return_data()
 }
 
 /// Do sanity checks of type layout.
